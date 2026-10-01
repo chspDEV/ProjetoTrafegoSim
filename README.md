@@ -1,33 +1,77 @@
-# SimTrafego
+# 🚦 Simulador de Tráfego
 
-A [libGDX](https://libgdx.com/) project generated with [gdx-liftoff](https://github.com/libgdx/gdx-liftoff).
+Uma aplicação interativa de simulação de tráfego urbano multithread desenvolvida em **Java** e **libGDX**, demonstrando conceitos avançados de programação concorrente, sincronização com semáforos/mutexes, gerenciamento de filas e prevenção de deadlocks.
 
-This project was generated with a template including simple application launchers and an `ApplicationAdapter` extension that draws libGDX logo.
+---
 
-## Platforms
+## Funcionalidades Principais
 
-- `core`: Main module with the application logic shared by all platforms.
-- `lwjgl3`: Primary desktop platform using LWJGL3; was called 'desktop' in older docs.
+- **Controle de Semáforos Inteligente**: Semáforos animados com contadores de tempo indicando a transição de fases.
+- **Faixas Múltiplas e Manobras Complexas**:
+  - 4 faixas de tráfego bidirecional simultâneo.
+  - Veículos podem seguir **em linha reta**, **virar à esquerda** ou **virar à direita** nos cruzamentos de acordo com a faixa ocupada.
+- **Gerenciamento de Fila de Espera**:
+  - Evita que veículos se sobreponham enquanto aguardam a liberação do sinal.
+  - Cálculo de desaceleração e parada progressiva de acordo com os veículos à frente.
+- **Detecção de Colisões & Explosões**:
+  - Detecção de colisão via bounding box (AABB) com rotação ajustada.
+  - Efeito visual de explosão ao colidir com encerramento gracioso da thread do veículo.
+- **HUD em Tempo Real**:
+  - Contador dinâmico de veículos ativos.
+  - Contador de acidentes e colisões ocorridas.
+  - Indicador de multiplicador de velocidade da simulação.
+- **Controle de Velocidade Interativo**:
+  - Pressione `1`: Reduz a velocidade da simulação.
+  - Pressione `2`: Acelera a velocidade da simulação.
 
-## Gradle
+---
 
-This project uses [Gradle](https://gradle.org/) to manage dependencies.
-The Gradle wrapper was included, so you can run Gradle tasks using `gradlew.bat` or `./gradlew` commands.
-Useful Gradle tasks and flags:
+## 🏗️ Arquitetura Concorrente
 
-- `--continue`: when using this flag, errors will not stop the tasks from running.
-- `--daemon`: thanks to this flag, Gradle daemon will be used to run chosen tasks.
-- `--offline`: when using this flag, cached dependency archives will be used.
-- `--refresh-dependencies`: this flag forces validation of all dependencies. Useful for snapshot versions.
-- `build`: builds sources and archives of every project.
-- `cleanEclipse`: removes Eclipse project data.
-- `cleanIdea`: removes IntelliJ project data.
-- `clean`: removes `build` folders, which store compiled classes and built archives.
-- `eclipse`: generates Eclipse project data.
-- `idea`: generates IntelliJ project data.
-- `lwjgl3:jar`: builds application's runnable jar, which can be found at `lwjgl3/build/libs`.
-- `lwjgl3:run`: starts the application.
-- `test`: runs unit tests (if any).
+| Componente | Papel Concorrente |
+| :--- | :--- |
+| **`Vehicle`** | Executado em sua própria `Thread`. Gerencia movimentação, decisão de curva e estado de parada. |
+| **`IntersectionController`** | Thread responsável pelo ciclo dos semáforos, controle de filas por faixa (`ConcurrentLinkedQueue`) e sincronização de travessia do cruzamento através de `Semaphore` (Mutex). |
+| **`VehicleGenerator`** | Thread produtora que realiza o spawn randômico de novos veículos até atingir o limite configurado (`MAX_VEHICLES`). |
 
-Note that most tasks that are not specific to a single project can be run with `name:` prefix, where the `name` should be replaced with the ID of a specific project.
-For example, `core:clean` removes `build` folder only from the `core` project.
+---
+
+## Como Executar
+
+### Pré-requisitos
+
+- **JDK 17+** instalado.
+- **Gradle** (incluso via wrapper `./gradlew`).
+
+### Comandos de Execução
+
+No terminal, execute o comando correspondente ao seu sistema:
+
+**Linux / macOS:**
+```bash
+./gradlew lwjgl3:run
+```
+
+**Windows:**
+```cmd
+gradlew.bat lwjgl3:run
+```
+
+---
+
+## 🎮 Controles
+
+| Tecla | Ação |
+| :---: | :--- |
+| <kbd>1</kbd> | Desacelerar simulação (0.5x / 0.25x) |
+| <kbd>2</kbd> | Acelerar simulação (2.0x / 3.0x) |
+
+---
+
+## 🛠️ Tecnologias Utilizadas
+
+- **Linguagem**: Java 17+
+- **Framework Gráfico**: [libGDX](https://libgdx.com/) (LWJGL3 Backend)
+- **Sincronização**: `java.util.concurrent` (`Semaphore`, `ConcurrentLinkedQueue`, `CopyOnWriteArrayList`)
+- **Gerenciador de Dependências**: Gradle
+
