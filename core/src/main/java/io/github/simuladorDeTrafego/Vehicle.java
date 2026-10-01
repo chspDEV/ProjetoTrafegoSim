@@ -117,6 +117,11 @@ public class Vehicle extends Thread {
         if (!dequeued) {
             intersection.dequeueVehicle(laneId, this);
         }
+        
+        if (insideIntersection) {
+            intersection.exitIntersection();
+            insideIntersection = false;
+        }
     }
 
     private void processTurnLogic() {
@@ -158,10 +163,10 @@ public class Vehicle extends Thread {
         int vehiclesAhead = intersection.getVehiclesAhead(laneId, this);
         float offset = vehiclesAhead * (Config.VEHICLE_HEIGHT + 10f);
         
-        if (direcao == Direction.NORTH && (y + Config.VEHICLE_HEIGHT >= Config.INTERSECTION_BOTTOM_Y - offset - 5) && (y < Config.INTERSECTION_BOTTOM_Y - offset)) atStopLine = true;
-        if (direcao == Direction.SOUTH && y <= Config.INTERSECTION_TOP_Y + offset + 5 && y > Config.INTERSECTION_TOP_Y + offset) atStopLine = true;
-        if (direcao == Direction.EAST && (x + Config.VEHICLE_HEIGHT >= Config.INTERSECTION_LEFT_X - offset - 5) && (x < Config.INTERSECTION_LEFT_X - offset)) atStopLine = true;
-        if (direcao == Direction.WEST && x <= Config.INTERSECTION_RIGHT_X + offset + 5 && x > Config.INTERSECTION_RIGHT_X + offset) atStopLine = true;
+        if (direcao == Direction.NORTH && (y + Config.VEHICLE_HEIGHT >= Config.STOP_LINE_NORTH - offset - 5) && (y < Config.STOP_LINE_NORTH - offset)) atStopLine = true;
+        if (direcao == Direction.SOUTH && y <= Config.STOP_LINE_SOUTH + offset + 5 && y > Config.STOP_LINE_SOUTH + offset) atStopLine = true;
+        if (direcao == Direction.EAST && (x + Config.VEHICLE_HEIGHT >= Config.STOP_LINE_EAST - offset - 5) && (x < Config.STOP_LINE_EAST - offset)) atStopLine = true;
+        if (direcao == Direction.WEST && x <= Config.STOP_LINE_WEST + offset + 5 && x > Config.STOP_LINE_WEST + offset) atStopLine = true;
 
         if (atStopLine && !insideIntersection) {
             while (rodando && (intersection.getLightState(direcao) != IntersectionController.LightState.GREEN || intersection.getVehiclesAhead(laneId, this) > 0)) {
@@ -173,10 +178,10 @@ public class Vehicle extends Thread {
                 } else {
                     offset = vehiclesAhead * (Config.VEHICLE_HEIGHT + 10f);
                     switch (direcao) {
-                        case NORTH: if (y + Config.VEHICLE_HEIGHT < Config.INTERSECTION_BOTTOM_Y - offset) y += (velocidade * Config.globalSpeedMultiplier) * 0.03f; break;
-                        case SOUTH: if (y > Config.INTERSECTION_TOP_Y + offset) y -= (velocidade * Config.globalSpeedMultiplier) * 0.03f; break;
-                        case EAST:  if (x + Config.VEHICLE_HEIGHT < Config.INTERSECTION_LEFT_X - offset) x += (velocidade * Config.globalSpeedMultiplier) * 0.03f; break;
-                        case WEST:  if (x > Config.INTERSECTION_RIGHT_X + offset) x -= (velocidade * Config.globalSpeedMultiplier) * 0.03f; break;
+                        case NORTH: if (y + Config.VEHICLE_HEIGHT < Config.STOP_LINE_NORTH - offset) y += (velocidade * Config.globalSpeedMultiplier) * 0.03f; break;
+                        case SOUTH: if (y > Config.STOP_LINE_SOUTH + offset) y -= (velocidade * Config.globalSpeedMultiplier) * 0.03f; break;
+                        case EAST:  if (x + Config.VEHICLE_HEIGHT < Config.STOP_LINE_EAST - offset) x += (velocidade * Config.globalSpeedMultiplier) * 0.03f; break;
+                        case WEST:  if (x > Config.STOP_LINE_WEST + offset) x -= (velocidade * Config.globalSpeedMultiplier) * 0.03f; break;
                     }
                 }
             }

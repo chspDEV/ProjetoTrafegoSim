@@ -24,7 +24,7 @@ public class TextureManager {
         File assetsDir = findAssetsFolder();
         if (assetsDir == null) return;
         
-        File fExp = new File(assetsDir, "explosao.png");
+        File fExp = new File(assetsDir, "TrafficLightsProjectExplosion.png");
         if (fExp.exists()) {
             texExplosao = new Texture(Gdx.files.absolute(fExp.getAbsolutePath()));
         }
@@ -95,7 +95,7 @@ public class TextureManager {
         File assetsDir = findAssetsFolder();
         if (assetsDir == null) return;
 
-        File bgFile = new File(assetsDir, "background.png");
+        File bgFile = new File(assetsDir, "TrafficLightsProjectBackground.png");
         if (bgFile.exists()) {
             background = new Texture(Gdx.files.absolute(bgFile.getAbsolutePath()));
             System.out.println("[TextureManager] Fundo carregado: " + bgFile.getAbsolutePath());
