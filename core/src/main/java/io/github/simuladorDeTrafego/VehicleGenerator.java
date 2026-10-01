@@ -20,11 +20,10 @@ public class VehicleGenerator extends Thread {
     public void run() {
         while (rodando) {
             try {
-                // Intervalo de spawn (0.5 a 2.5 segundos)
-                Thread.sleep(MathUtils.random(500, 2500));
+                Thread.sleep(MathUtils.random(250, 1000));
                 
                 Texture tex = textureManager.getRandomVehicle();
-                if (tex != null) {
+                if (tex != null && vehiclesList.size() < Config.MAX_VEHICLES) {
                     Direction dir = Direction.values()[MathUtils.random(0, 3)];
                     boolean isInnerLane = MathUtils.randomBoolean();
                     
@@ -33,7 +32,6 @@ public class VehicleGenerator extends Thread {
                     v.start();
                 }
                 
-                // Limpeza de veículos que já saíram da tela
                 vehiclesList.removeIf(v -> !v.isRodando());
                 
             } catch (InterruptedException e) {

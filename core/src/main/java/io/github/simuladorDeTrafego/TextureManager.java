@@ -11,12 +11,23 @@ import java.io.File;
 public class TextureManager {
     private Array<Texture> texturasVeiculos = new Array<>();
     private Texture background;
-    private Texture texVerde, texAmarelo, texVermelho;
+    private Texture texVerde, texAmarelo, texVermelho, texExplosao;
 
     public TextureManager() {
         loadVehicles();
         loadBackground();
         loadTrafficLights();
+        loadExplosion();
+    }
+    
+    private void loadExplosion() {
+        File assetsDir = findAssetsFolder();
+        if (assetsDir == null) return;
+        
+        File fExp = new File(assetsDir, "explosao.png");
+        if (fExp.exists()) {
+            texExplosao = new Texture(Gdx.files.absolute(fExp.getAbsolutePath()));
+        }
     }
 
     private File findAssetsFolder() {
@@ -108,6 +119,10 @@ public class TextureManager {
             return texturasVeiculos.get(index);
         }
         return null;
+    }
+
+    public Texture getExplosionTexture() {
+        return texExplosao;
     }
 
     public Texture getBackground() {
